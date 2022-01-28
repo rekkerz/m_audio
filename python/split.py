@@ -50,7 +50,7 @@ def get_inputs():
         song_path = str(sys.argv[1])
 
         if not os.path.exists(song_path):
-            raise
+            raise Exception
         else:
             # Obtain files format
             song_format = song_path.split("/")[-1].split(".")[-1]
@@ -78,7 +78,11 @@ def get_inputs():
 
 
 if __name__ == '__main__':
-    song_path, song_format, export_path, arg3, arg4 = get_inputs()
+    try:
+        song_path, song_format, export_path, arg3, arg4 = get_inputs()
+    except:
+        print("Input error - please refer to the script.")
+        exit(400)
 
     song = AudioSegment.from_file(song_path, format=song_format)
 
@@ -108,6 +112,6 @@ if __name__ == '__main__':
         duration = len(chunk)
         trimmed_sound = chunk[start_trim:duration - end_trim]
 
-        export_file_path = path + "/chunk" + str(i) + "." + song_format
+        export_file_path = path + "/" + str(i) + "." + song_format
 
         trimmed_sound.export(export_file_path, format=song_format)
