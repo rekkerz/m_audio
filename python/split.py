@@ -27,7 +27,7 @@ def arg_error(arg, input):
     exit(400)
 
 
-def detect_leading_silence(sound, silence_threshold=-27.0, chunk_size=5):
+def detect_leading_silence(sound, silence_threshold=-27.0, chunk_size=1):
     '''
     sound is a pydub.AudioSegment
     silence_threshold in dB
@@ -104,14 +104,19 @@ if __name__ == '__main__':
         except:
             print("Error making the path for export")
 
+    # Temporary solution
+    # TODO: Replace with a flag -e which would export the files
+    input("Press any key to begin export")
+
     for i, chunk in enumerate(chunks):
         # Trim silent parts of the chunk
         # TODO: Test the threshold and chunk size works with other samples.
-        start_trim = detect_leading_silence(chunk)
-        end_trim = detect_leading_silence(chunk.reverse())
+        start_trim = detect_leading_silence(chunk, silence_threshold=arg4)
+        end_trim = detect_leading_silence(chunk.reverse(), silence_threshold=arg4)
         duration = len(chunk)
         trimmed_sound = chunk[start_trim:duration - end_trim]
 
         export_file_path = path + "/" + str(i) + "." + song_format
+        print("Exporting {} of length {}".format(export_file_path, len(trimmed_sound)))
 
         trimmed_sound.export(export_file_path, format=song_format)
