@@ -2,14 +2,22 @@ package main
 
 import (
 	"fmt"
-	"net/http"
-
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
+	"net"
 )
 
 func main() {
-	port := ":3000"
+	ServerConn, _ := net.ListenUDP("udp", &net.UDPAddr{IP: []byte{0, 0, 0, 0}, Port: 10001, Zone: ""})
+	defer ServerConn.Close()
+	buf := make([]byte, 1024)
+	for {
+		n, addr, _ := ServerConn.ReadFromUDP(buf)
+		fmt.Println("Received ", string(buf[0:n]), " from ", addr)
+	}
+}
+
+/* // Original main method for router
+func main() {
+	port := ":0112"
 
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
@@ -23,3 +31,4 @@ func main() {
 	http.ListenAndServe(port, r)
 
 }
+*/

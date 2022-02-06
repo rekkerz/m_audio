@@ -37,7 +37,6 @@ def detect_leading_silence(sound, silence_threshold=-27.0, chunk_size=1):
     trim_ms = 0  # ms
     while sound[trim_ms:trim_ms + chunk_size].dBFS < silence_threshold:
         trim_ms += chunk_size
-
     return trim_ms
 
 
