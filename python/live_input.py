@@ -1,9 +1,13 @@
+"""
+Initial experimentation with live input
+"""
 import numpy as np
 import pyaudio
 import time
 import librosa
 import pydub
 import math
+import keyboard
 
 
 def frequency_to_note(frequency):
@@ -36,26 +40,26 @@ def frequency_to_note(frequency):
 
 
 class AudioHandler(object):
-    def __init__(self):
+    def __init__(self, threshold):
         self.FORMAT = pyaudio.paFloat32
         self.CHANNELS = 1
         self.RATE = 44100
-        self.CHUNK = 1024 * 2
+        self.CHUNK = 1024 * 2  # 1024 * 2
         self.p = None
         self.stream = None
 
-        self.mic_threshold = -125  # TODO: Set otherwise.
+        self.mic_threshold = threshold  # TODO: Set otherwise.
 
-        self.asg_chunks = []
+        #self.asg_chunks = []
         self.librosa_chunks = []
+        self.detected_notes = []
 
         self.start_i = None
         self.counter = 0
 
-    def start(self):
+    def start(self, mic):
         self.p = pyaudio.PyAudio()
         self.stream = self.p.open(format=self.FORMAT,
-                                  input_device_index=1,
                                   channels=1,
                                   rate=self.RATE,
                                   input=True,
@@ -76,13 +80,42 @@ class AudioHandler(object):
         c = np.fft.fft(joined)
         fr = np.array(range(0, len(joined))) / length
 
-        f = fr[np.argmax(c[0:1200])]
+        highest = np.argmax(c[0:2400])
+        f = fr[highest]  # Frequency range of a guitar
+
+        print("Highest peak found to be {}".format(highest))
+
+
+        # Get the 5 highest
+        likely = []
+
+        ind = np.argpartition(c[0:2400], -5)[-5:]
+        top = fr[ind]
+        print(top)
+
+        for i in ind:
+            offset = highest - i
+
+            freq = fr[i]
+
+            if abs(offset) < 40:
+                if freq > 0 and freq < 2400:
+                    note, octave = frequency_to_note(freq)
+                    recording = "{}{}".format(note, octave)
+
+                    if recording not in likely:
+                        likely.append(recording)
+
+        print(likely)
 
         try:
             note, octave = frequency_to_note(f)
         except:
             print("Couldn't convert note, naming defaults")
             note, octave = "X", "X"
+
+        if note != "X" and octave != "X":
+            self.detected_notes.append("{}{}".format(note, octave))
 
         print("{}, {}{}".format(round(f, 3), note, octave))
 
@@ -102,9 +135,9 @@ class AudioHandler(object):
 
         # Adding to array for later usage
         self.librosa_chunks.append(librosa_array)
-        self.asg_chunks.append(asg_array)
+        #self.asg_chunks.append(asg_array)
 
-        # Threshold
+        # Threshold detection
         if self.start_i is None and self.get_db(asg_array) > self.mic_threshold:
             self.start_i = self.counter
         elif self.start_i is not None and self.get_db(asg_array) < self.mic_threshold:
@@ -116,14 +149,19 @@ class AudioHandler(object):
         return None, pyaudio.paContinue
 
     def mainloop(self):
-        while (
-        self.stream.is_active()):  # if using button you can set self.stream to 0 (self.stream = 0), otherwise you can use a stop condition
-            time.sleep(2.0)
+        while (self.stream.is_active()):
+            if keyboard.read_key() == "s" or keyboard.read_key() == "S":
+                print(self.detected_notes)
+                audio.stop()
+                exit(0)
+            else:
+                continue
+
 
 
 if __name__ == '__main__':
-    audio = AudioHandler()
-    audio.start()  # open the the stream
-    print("Started recording...")
-    audio.mainloop()  # main operations with librosa
-    audio.stop()
+    audio = AudioHandler(-125)  # Set the mic threshold
+    audio.start(2)              # Set the mic number
+    print("Started recording... Press S/s to stop the program.")
+    audio.mainloop()
+

@@ -1,0 +1,206 @@
+<?xml version='1.0' encoding='utf-8'?>
+<interface version="1.2">
+  <object class="tk.Toplevel" id="mainwindow">
+    <property name="height">480</property>
+    <property name="minsize">640|480</property>
+    <property name="width">640</property>
+    <child>
+      <object class="ttk.Frame" id="dashboard">
+        <property name="relief">ridge</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="relheight">0.15</property>
+          <property name="relwidth">1.0</property>
+          <property name="relx">0.0</property>
+          <property name="rely">0.0</property>
+          <property name="x">0</property>
+          <property name="y">0</property>
+        </layout>
+        <child>
+          <object class="ttk.Frame" id="mic_select">
+            <property name="borderwidth">2</property>
+            <property name="relief">raised</property>
+            <layout manager="place">
+              <property name="anchor">nw</property>
+              <property name="relheight">1.0</property>
+              <property name="relwidth">0.50</property>
+              <property name="x">0</property>
+              <property name="y">0</property>
+            </layout>
+            <child>
+              <object class="ttk.Label" id="mic_label">
+                <property name="text" translatable="yes">Select Microphone</property>
+                <layout manager="place">
+                  <property name="anchor">nw</property>
+                  <property name="relwidth">0.60</property>
+                  <property name="relx">0.03</property>
+                  <property name="rely">0.0</property>
+                  <property name="x">0</property>
+                  <property name="y">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="ttk.Combobox" id="mic_options">
+                <property name="values">hi hello</property>
+                <layout manager="place">
+                  <property name="anchor">nw</property>
+                  <property name="relx">0.03</property>
+                  <property name="rely">0.30</property>
+                  <property name="x">0</property>
+                  <property name="y">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="tk.Scale" id="mic_level">
+                <property name="digits">0</property>
+                <property name="from_">0</property>
+                <property name="orient">horizontal</property>
+                <property name="repeatdelay">0</property>
+                <property name="showvalue">true</property>
+                <property name="sliderrelief">flat</property>
+                <property name="to">100</property>
+                <property name="troughcolor">#a5fd44</property>
+                <layout manager="place">
+                  <property name="anchor">nw</property>
+                  <property name="relheight">0.61</property>
+                  <property name="relwidth">0.3</property>
+                  <property name="relx">0.53</property>
+                  <property name="rely">0.36</property>
+                  <property name="x">0</property>
+                  <property name="y">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="tk.Button" id="refresh">
+                <property name="command" type="command" cbtype="simple">set_microphones</property>
+                <property name="text" translatable="yes">refresh</property>
+                <layout manager="place">
+                  <property name="anchor">nw</property>
+                  <property name="relx">0.03</property>
+                  <property name="rely">0.6</property>
+                  <property name="x">0</property>
+                  <property name="y">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="tk.Label" id="threshold_label">
+                <property name="text" translatable="yes">threshold</property>
+                <layout manager="place">
+                  <property name="anchor">nw</property>
+                  <property name="relx">0.58</property>
+                  <property name="x">0</property>
+                  <property name="y">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="tk.Button" id="test_threshold">
+                <property name="text" translatable="yes">test</property>
+                <layout manager="place">
+                  <property name="anchor">nw</property>
+                  <property name="relx">0.86</property>
+                  <property name="rely">0.34</property>
+                  <property name="x">0</property>
+                  <property name="y">0</property>
+                </layout>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="tk.Frame" id="control">
+            <property name="height">200</property>
+            <property name="width">200</property>
+            <layout manager="place">
+              <property name="anchor">nw</property>
+              <property name="relheight">1</property>
+              <property name="relwidth">0.5</property>
+              <property name="relx">0.5</property>
+              <property name="x">0</property>
+              <property name="y">0</property>
+            </layout>
+            <child>
+              <object class="tk.Button" id="start">
+                <property name="command" type="command" cbtype="simple">start_audio</property>
+                <property name="text" translatable="yes">start</property>
+                <layout manager="place">
+                  <property name="anchor">nw</property>
+                  <property name="relheight">0.42</property>
+                  <property name="relwidth">0.25</property>
+                  <property name="relx">0.05</property>
+                  <property name="rely">0.25</property>
+                  <property name="x">0</property>
+                  <property name="y">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="tk.Button" id="stop">
+                <property name="command" type="command" cbtype="simple">stop_audio</property>
+                <property name="compound">top</property>
+                <property name="text" translatable="yes">stop</property>
+                <layout manager="place">
+                  <property name="anchor">nw</property>
+                  <property name="relheight">0.42</property>
+                  <property name="relwidth">0.25</property>
+                  <property name="relx">0.35</property>
+                  <property name="rely">0.25</property>
+                  <property name="x">0</property>
+                  <property name="y">0</property>
+                </layout>
+              </object>
+            </child>
+            <child>
+              <object class="tk.Button" id="record">
+                <property name="text" translatable="yes">record</property>
+                <layout manager="place">
+                  <property name="anchor">nw</property>
+                  <property name="relheight">0.42</property>
+                  <property name="relwidth">0.25</property>
+                  <property name="relx">0.65</property>
+                  <property name="rely">0.25</property>
+                  <property name="x">0</property>
+                  <property name="y">0</property>
+                </layout>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="ttk.Frame" id="display">
+        <property name="height">200</property>
+        <property name="width">200</property>
+        <layout manager="place">
+          <property name="anchor">nw</property>
+          <property name="relheight">0.85</property>
+          <property name="relwidth">1.0</property>
+          <property name="rely">0.15</property>
+          <property name="x">0</property>
+          <property name="y">0</property>
+        </layout>
+        <child>
+          <object class="tk.Text" id="note_display">
+            <property name="height">10</property>
+            <property name="text" translatable="yes">hello world</property>
+            <property name="width">50</property>
+            <layout manager="place">
+              <property name="anchor">nw</property>
+              <property name="relheight">1.0</property>
+              <property name="relwidth">1.0</property>
+              <property name="relx">0.0</property>
+              <property name="rely">0.0</property>
+              <property name="x">0</property>
+              <property name="y">0</property>
+            </layout>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

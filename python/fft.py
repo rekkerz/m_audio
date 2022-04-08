@@ -1,5 +1,6 @@
 import math
 import sys
+import time
 
 import librosa
 import numpy as np
@@ -50,11 +51,12 @@ if __name__ == '__main__':
     except:
         arg_error("arg1", sys.argv[1])
 
+    start = time.time()
     # Round the length down and clip the audio file down
     length = len(x) / sr
     x = x[0: int(length * sr) + 1]
-
-    print("Sound clip is {} seconds long".format((len(x)-1)/sr))
+    #print("x={},\n sr={}".format(x, type(sr)))
+    #print("Sound clip is {} seconds long".format((len(x)-1)/sr))
 
     # Perform Fast Fourier Transform
     c = np.fft.fft(x)
@@ -66,6 +68,8 @@ if __name__ == '__main__':
 
     # Taking the highest value of c between range of guitar & converting to f
     f = fr[np.argmax(c[0:1200])]
+    end = time.time()
+
     try:
         note, octave = frequency_to_note(f)
     except:
@@ -73,3 +77,8 @@ if __name__ == '__main__':
         note, octave = "X", "X"
 
     print("{}, {}{}".format(round(f,3), note, octave))
+    #print("Most common frequency: ", f)
+    #print("FFT computed in ", end-start, "seconds")
+    #time = float(end-start)
+    #time = np.float64(end)-np.float64(start)
+    #print(f, ",", time)

@@ -1,0 +1,10 @@
+# Graphical User Interface
+
+### To generate the layout.ui
+
+Run `venv/Scripts/pygubu-designed.exe`.
+
+If you get a missing package issue use `pip install pygubu-designer`
+
+[Documentation](https://github.com/alejandroautalan/pygubu-designer)
+
