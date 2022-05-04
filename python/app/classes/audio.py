@@ -81,7 +81,7 @@ class AudioHandler(object):
 
         print("Highest peak found to be {} as {}{} \n".format(f, note, octave))
 
-        if note != "X" and octave != "X":
+        if note != "X" and octave != "X" and octave >= 2 and octave <= 6:
             self.detected_notes.append("{}{}".format(note, octave))
             self.notes_played += 1
 
@@ -102,14 +102,14 @@ class AudioHandler(object):
         librosa_array = np.frombuffer(in_data, dtype=np.float32)
         asg_array = np.array(librosa_array * (1 << 15), dtype=np.int32)
 
-        # Adding to array for later usage
         self.librosa_chunks.append(librosa_array)
-        #self.asg_chunks.append(asg_array)
 
         # Threshold detection
         if self.start_i is None and self.get_db(asg_array) > self.mic_threshold:
             self.start_i = self.counter
-        elif self.start_i is not None and self.get_db(asg_array) < self.mic_threshold:
+        elif self.start_i is not None and self.get_db(asg_array) < self.mic_threshold \
+            or self.start_i is not None and (self.counter- self.start_i) > 10: # limit length
+
             print("cuttoff detected: ({},{})".format(self.start_i, self.counter))
             self.estimate_freq(self.start_i, self.counter)
             #self.create_score(self.detected_notes)

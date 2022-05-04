@@ -149,7 +149,10 @@ class Transform:
 
             pos = (y_pos, x_pos)
             try:
-                note = guitar_map[pos]
+                #note = guitar_map[pos]
+                note = find_note_by_loc(pos, guitar_map)
+                if note == None: # If it's out of our range
+                    continue
             except:
                 print("Note not found, skipping")
                 continue
@@ -201,7 +204,6 @@ def generate_map():
 
     for s in range(6):  # For each string
         current = tuning[s]
-
         if s == 0 or s == 1:
             octave = 2
         elif s == 5:
@@ -221,6 +223,50 @@ def generate_map():
 
     return map
 
+def get_next_note(current_note):
+    # A simple solution to create a "wheel" of note alphabet
+    alphabet = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+    for i, note in enumerate(alphabet):
+        if note == current_note:
+            if i+1 == len(alphabet):
+                return alphabet[0]
+            else:
+                return alphabet[i+1]
+
+def make_note_map():
+    alphabet = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+
+    tuning = [("E", 4), ("B", 3), ("G", 3), ("D",3), ("A", 2), ("E", 2)]
+
+    note_map = {}
+
+    for string in range(6):
+        current_note = tuning[string][0]
+        current_octave = tuning[string][1]
+        for fret in range(25):
+            loc = (string+1, fret) # 1 added as note counting starts from 1
+            note = current_note + str(current_octave)
+            #print(note ,loc)
+
+            if note in note_map.keys():
+                cpy = note_map[note]
+                cpy.append(loc)
+                note_map[note] = cpy
+            else:
+                note_map[note] = [loc]
+
+
+            if current_note == "B":
+                current_octave += 1
+            current_note = get_next_note(current_note)
+
+    return note_map
+
+def find_note_by_loc(loc, note_map):
+    for key in note_map.keys():
+        if loc in note_map[key]:
+            return key
+
 if __name__ == '__main__':
 
     dir = "../data/tabs"
@@ -230,7 +276,10 @@ if __name__ == '__main__':
 
     # input("Hit enter to start ... ")
 
-    my_guitar_map = generate_map()
+    my_guitar_map = make_note_map()
+
+    print( find_note_by_loc((5,3), my_guitar_map) )
+    #my_guitar_map = generate_map()
 
     # Convert to clean array format
     clean = []
@@ -268,35 +317,4 @@ if __name__ == '__main__':
                     "positions": positions
                 })
 
-
-
     print("Finished transformation of {} files".format(len(clean)))
-
-    """
-    print("Testing line_to_notes() function... ")
-
-    trans = Transform(dir + "/" + "zach-bryan_november-air-tabs-3450725.txt")
-    arr = trans.return_as_array()
-    print(arr)
-
-    notes, positions = trans.generate_notes(arr, my_guitar_map)
-
-    print(notes)
-    print(positions)
-    """
-
-    """
-    notes = []
-    positions = []
-    for verse in arr:
-        for line in verse:
-            n, p = trans.line_to_notes(line)
-
-            if n == None:
-                continue
-            notes.append(n)
-            positions.append(p)
-
-    print(notes)
-    print(positions)
-    """
