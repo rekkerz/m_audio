@@ -15,7 +15,11 @@ class Model:
         """
         self.note_map, self.note_map_back, self.loc_map, self.loc_map_back = self.generate_maps()
 
-        self.model = keras.models.load_model("embed_model")
+        self.model = keras.models.load_model("classes/embed_model")
+
+        # for self run, uncomment
+        #self.model = keras.models.load_model("embed_model")
+
         self.max_seq_length = self.model.layers[1].output_shape[1]  # grab the max sequence length for padding
 
     def generate_maps(self):
@@ -82,6 +86,8 @@ class Model:
 if __name__ == '__main__':
     model = Model()
 
+    """
+
     permitted_notes = ["A2","A3","A4","A5","B2","B3","B4","B5", "C2","C3","C4","C5","D2","D3",
                        "D4","D5", "E2","E3","E4","E5", "F2","F3","F4","F5","G2","G3","G4","G5"]
     sequences = {}
@@ -109,15 +115,15 @@ if __name__ == '__main__':
         average_exec_time = total_exec_times/len(sequences[key])
         print("Average execution time for {} note sequence was {} seconds".format(key, round(average_exec_time, 3) ))
 
+    """
 
-
-    #sequence = ["E4", "A2", "B3", "G3", "E4", "A2", "B3", "F2"]
+    sequence = ["E4", "A2", "B3", "G3", "E4", "A2", "B3", "F2"]
 
 
     #start = time.time()
-    #guess = model.eval_sequence(sequence)
+    guess = model.eval_sequence(sequence)
     #end = time.time()
 
     #print("Executed in: {} seconds".format(end-start))
-    #print(guess)
+    print(guess)
 
